@@ -44,6 +44,7 @@ const transcribeChunk = (chunkPath) => {
       const data = await response.json();
 
       if (data.error) {
+        console.log(data);
         throw new Error("Error");
       }
       return resolve(data.text);
@@ -118,13 +119,14 @@ app.post("/upload", (req, res) => {
       const transcription = await transcribeChunk(chunk.filepath);
 
       if (chunkIndex + 1 === totalChunks) {
-        console.log(`Upload complete for file ${fileName}`);
-        res
-          .status(200)
-          .json({ message: "File upload complete", transcription });
+        console.log(`Upload and transcription complete for file ${fileName}`);
+        res.status(200).json({
+          message: "File upload and transcription complete",
+          transcription,
+        });
       } else {
         res.status(200).json({
-          message: `Chunk ${chunkIndex + 1} received`,
+          message: `Chunk ${chunkIndex + 1} received and transcribed`,
           transcription,
         });
       }
